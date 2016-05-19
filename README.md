@@ -34,7 +34,7 @@ Because every new branch should stem from the most up-to-date `master`, create y
 > git checkout master
 > git pull
 > git checkout -b <branch_name>
-> cp 408_scrape.py <id>_scrape.py
+> cp 214_scrape.py <id>_scrape.py
 ```
 Use any branch name you want, it's not persistent. The `pull` command told git to update your local repository from GitHub.
 The copied script is a template: open it up and start looking around.
@@ -64,7 +64,7 @@ Take a look at some online market reports, including the source (i.e. the raw HT
 + http://www.billingslivestock.com/Cow_Sales/Links/CS_Market.html
 + http://www.sterlinglivestock.com/Markets/index.php
 
-Study the `408_scrape.py` Python script until you understand how it works.
+Study the `214_scrape.py` Python script until you understand how it works.
 + Each function's docstring (the triple quoted text) describes its purpose.
 + Commented lines (preceded with `#`) describe the script's sections and/or logic.
 + The module `scrape_util.py` contains definitions used by all the `*_scrape.py` scripts, including the CSV headers for the data your script will collect.
@@ -80,7 +80,7 @@ Study the `408_scrape.py` Python script until you understand how it works.
 Use the Python debugger (pdb) to execute specific segments. Here is an example debugger session:
 ```
 >>> import pdb
->>> from 408_scrape import *
+>>> from 214_scrape import *
 >>> pdb.runcall(main)
 > /path/to/your/projects/roundup/wishek_scrape.py(131)main()
 -> url = base_url + report_path
