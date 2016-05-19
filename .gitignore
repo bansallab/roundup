@@ -1,0 +1,5 @@
+env/
+tessdata/
+*_scrape/
+*_past/
+*.log
