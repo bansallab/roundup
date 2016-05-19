@@ -7,7 +7,9 @@ from bs4 import BeautifulSoup
 from dateutil import parser
 import scrape_util
 
+
 default_sale, base_url, prefix = scrape_util.get_market(argv)
+base_url = base_url[:-1]
 strip_char = ';,. \n\t$'
 
 

@@ -18,7 +18,7 @@ def get_sale_date(report):
 
     sale_date = None
     for pre in report.find_all('pre'):
-        text = pre.get_text().strip().splitlines()
+        text = pre.get_text().strip().replace('\xa0', ' ').splitlines()
         while text:
             date_string = text.pop(0)
             if re.search(r'\d', date_string):
@@ -178,7 +178,7 @@ def main():
             this_line = [i.strip() for i in this_line if i.strip()]
             this_line = [b for a in this_line for b in a.split()]
             if this_line:
-                line.append(this_line)
+                line.append()
 
         with io_name.open('w', encoding='utf-8') as io:
             writer = csv.DictWriter(io, scrape_util.header, lineterminator='\n')

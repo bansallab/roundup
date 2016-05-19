@@ -9,7 +9,7 @@ import scrape_util
 
 
 default_sale, base_url, prefix = scrape_util.get_market(argv)
-report_path = '/BLA/print'
+report_path = 'BLA/print'
 
 
 def get_sale_date(soup):

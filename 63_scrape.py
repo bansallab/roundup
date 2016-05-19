@@ -11,7 +11,7 @@ from os import system
 #url_stub = 'https://www.dropbox.com/sh/nz81bwpg2wuj5q7/AACxr0xlvESoJpXLqWcOfLv_a/Market%20Report.xlsx?raw=1'
 #temp_raw = scrape_util.ReportRaw(argv, prefix, suffix='xlsx')
 default_sale, base_url, prefix = scrape_util.get_market(argv)
-report_path = '/market-reports.html'
+report_path = 'market-reports.html'
 temp_raw = scrape_util.ReportRaw(argv, prefix)
 sale_pattern = [
     re.compile(

@@ -11,7 +11,7 @@ import scrape_util
 
 
 default_sale, base_url, prefix = scrape_util.get_market(argv)
-report_path = 'market_reports.html'
+report_path = 'html/market_reports.html'
 min_date = date(2014, 10, 1)
 
 
