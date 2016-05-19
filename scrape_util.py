@@ -28,15 +28,13 @@ def get_market(argv):
         "WHERE roundup_website_id = {} "
         "ORDER BY address.city".format(roundup_website_id)
         ).fetchall()
-    if len(result) == 1:
-        market = {'sale_' + k: v for k, v in result[0].items() if v}
-        market = {k: v for k, v in market.items() if k in header}
-    elif len(result) > 1:
-        market = []
-        for this_result in result:
-            this_result = {'sale_' + k: v for k, v in this_result.items() if v}
-            market.append({k: v for k, v in this_result.items() if k in header})
-    else:
+    market = []
+    for this_result in result:
+        this_result = {'sale_' + k: v for k, v in this_result.items() if v}
+        market.append({k: v for k, v in this_result.items() if k in header})
+    if len(market) == 1:
+        market = market[0]
+    elif len(market) == 0:
         market = {}
     website = session.execute(
         "SELECT website, script "
