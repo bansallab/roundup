@@ -154,7 +154,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     a = soup.findAll("a")
     report = set(this_a.get('href') for this_a in a if is_report(this_a))
 
@@ -168,7 +168,7 @@ def main():
             headers=scrape_util.url_header,
             )
         with urlopen(request) as io:
-            soup = BeautifulSoup(io.read())            
+            soup = BeautifulSoup(io.read(), 'lxml')            
         table = soup.find_all("table")
         if is_cattle(table):
             info_list = table[0].get_text().split()

@@ -161,7 +161,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     content = soup.findAll('table')
     report = content[1].findAll('a')
     

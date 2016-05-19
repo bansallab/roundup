@@ -130,7 +130,7 @@ def main():
     session = requests.Session()
     session.headers.update(scrape_util.url_header)
     response = session.get(url=(base_url + '/market-reports.html'))
-    soup = BeautifulSoup(response.content)
+    soup = BeautifulSoup(response.content, 'lxml')
     report = [a for a in soup.find_all('a') if a.get('href', '').startswith('PDFs/MarketReports')]
 
     # Process each market report

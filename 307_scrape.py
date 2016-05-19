@@ -96,7 +96,7 @@ def main():
             headers = scrape_util.url_header,
             )
         with urlopen(request) as io:
-            soup = BeautifulSoup(io.read())
+            soup = BeautifulSoup(io.read(), 'lxml')
 
         table = soup.find_all("table")
         commentary = table[1].tr.td.get_text()
@@ -124,7 +124,7 @@ def main():
             headers = scrape_util.url_header,
             )
         with urlopen(request) as io:
-            soup = BeautifulSoup(io.read())
+            soup = BeautifulSoup(io.read(), 'lxml')
         table = soup.find_all('table')
         line = [[td.get_text() for td in tr.find_all('td')] for tr in table[1].find_all('tr')]
 

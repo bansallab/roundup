@@ -90,7 +90,7 @@ class Report(object):
             headers=scrape_util.url_header,
             )
         with urlopen(request) as io:
-            soup = BeautifulSoup(io.read())
+            soup = BeautifulSoup(io.read(), 'lxml')
         this_report = soup.div
         this_report = this_report.find_next(attrs = {'class' : 'vastQueryResultery'})
         if bool(this_report):

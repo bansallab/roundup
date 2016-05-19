@@ -160,7 +160,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     table = next(
         this_table for this_table in soup.find_all('table')
         if not this_table.tr.table and 'ARCHIVED MARKET REPORTS' in this_table.tr.get_text()
@@ -196,7 +196,7 @@ def main():
                 headers=scrape_util.url_header,
                 )
             with urlopen(request) as io:
-                soup = BeautifulSoup(io.read())
+                soup = BeautifulSoup(io.read(), 'lxml')
         except urllib.error.HTTPError:
             print('HTTP error: {}'.format(url))
             continue

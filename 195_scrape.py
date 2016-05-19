@@ -139,7 +139,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     button = soup.find('select', attrs = {'class' : 'reg' })
     option = button.find_all('option')
     report = []
@@ -158,7 +158,7 @@ def main():
             headers = scrape_util.url_header,
             )
         with urlopen(request) as io:
-            soup = BeautifulSoup(io.read())
+            soup = BeautifulSoup(io.read(), 'lxml')
         text = re.sub(r'(\$[0-9.]+ \t)', r'\1\n', soup.get_text())
         line = text.splitlines()
         line = list(filter(bool, line))

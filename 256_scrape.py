@@ -185,7 +185,7 @@ def main():
             )
 
         with urlopen(request) as io:
-            soup = BeautifulSoup(io.read())
+            soup = BeautifulSoup(io.read(), 'lxml')
 
         # Initialize the default sale dictionary
         sale_head = get_sale_head(soup)

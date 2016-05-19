@@ -90,7 +90,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     google_doc = soup.iframe
     report = [google_doc]
 
@@ -108,7 +108,7 @@ def main():
             )
         try:
             with urlopen(request) as io:
-                soup = BeautifulSoup(io.read())
+                soup = BeautifulSoup(io.read(), 'lxml')
         except urllib.error.HTTPError:
             print('HTTP error: {}'.format(url))
             continue

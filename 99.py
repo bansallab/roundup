@@ -106,7 +106,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     report = soup.find_all('a', {'class': 'button'})
 
     # Locate existing CSV files
@@ -129,7 +129,7 @@ def main():
             )
         
         with urlopen(request) as io:
-            soup = BeautifulSoup(io.read())
+            soup = BeautifulSoup(io.read(), 'lxml')
 
         cattle_base = link.split("-")[0].title()
         div = soup.find_all('div', attrs={'class': 'txt'})

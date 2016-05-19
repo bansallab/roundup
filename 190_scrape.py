@@ -168,7 +168,7 @@ def main():
 
         try:
             with urlopen(request) as io:
-                soup = BeautifulSoup(io.read())
+                soup = BeautifulSoup(io.read(), 'lxml')
         except urllib.error.HTTPError:
             break
 

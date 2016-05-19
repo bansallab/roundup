@@ -116,7 +116,7 @@ def main():
         headers=scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
 
     report = [
         a['href'] for a in soup.find_all('a')

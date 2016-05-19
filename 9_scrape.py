@@ -104,7 +104,7 @@ def main():
        headers = scrape_util.url_header,
        )
    with urlopen(request) as io:
-       soup = BeautifulSoup(io.read())
+       soup = BeautifulSoup(io.read(), 'lxml')
    ul = soup.find_all('ul', attrs = {'class' : 'depth2' })
    report_list = list(
        this_ul for this_ul in ul
@@ -145,7 +145,7 @@ def main():
            )
        try:
            with urlopen(request) as io:
-               soup = BeautifulSoup(io.read())
+               soup = BeautifulSoup(io.read(), 'lxml')
        except urllib.error.HTTPError:
            print('HTTP error: {}'.format(url))
            continue

@@ -75,7 +75,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     report = soup.find_all('article', attrs={'class': 'post'})
 
     for this_report in report:

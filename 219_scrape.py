@@ -218,7 +218,7 @@ def main():
             headers = scrape_util.url_header,
             )
         with urlopen(request) as io:
-            soup = BeautifulSoup(io.read())
+            soup = BeautifulSoup(io.read(), 'lxml')
         # content = soup.find('table', id = 'mainWrapper')
         # report = content.find('table').find('table').find_all('table')
         report = [table for table in soup.find_all('tbody') if not table.tbody]

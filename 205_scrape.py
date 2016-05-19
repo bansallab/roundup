@@ -97,7 +97,7 @@ def main():
         )
 
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
 
     h2 = soup.h2
     sib = list(sib for sib in h2.next_siblings)
@@ -135,7 +135,7 @@ def main():
             )
         try:
             with urlopen(request) as io:
-                soup = BeautifulSoup(io.read())
+                soup = BeautifulSoup(io.read(), 'lxml')
         except HTTPError:
             continue
 

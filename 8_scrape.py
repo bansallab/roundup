@@ -141,7 +141,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     section = soup.find('div', attrs = {'class' : 'Section1'})
     report = [a for a in section.find_all('a') if 'Past_Sales' in a['href']]
 
@@ -174,7 +174,7 @@ def main():
             )
         try:
             with urlopen(request) as io:
-                soup = BeautifulSoup(io.read())
+                soup = BeautifulSoup(io.read(), 'lxml')
         except urllib.error.HTTPError:
             continue
 

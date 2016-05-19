@@ -132,7 +132,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     report = soup.findAll('a',{"type":"4"})
     
     # Identify existing reports

@@ -105,7 +105,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     report = soup.find_all('a', text='Market Report PDF')
 
     # Identify existing reports

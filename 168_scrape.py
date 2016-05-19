@@ -20,7 +20,7 @@ class Report(object):
             headers = scrape_util.url_header,
             )
         with urlopen(request) as io:
-            self.soup = BeautifulSoup(io.read())
+            self.soup = BeautifulSoup(io.read(), 'lxml')
 
     def __iter__(self):
         return self
@@ -33,7 +33,7 @@ class Report(object):
                 headers = scrape_util.url_header,
                 )
             with urlopen(request) as io:
-                soup = BeautifulSoup(io.read())
+                soup = BeautifulSoup(io.read(), 'lxml')
             self.soup = soup
             date_string = soup.find('span', {'class': 'PostHeader'}).get_text()
             report_text = soup.find_all('div', {'class': 'PostContent'})[1]
@@ -185,7 +185,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     div = soup.find('span', attrs={'class': 'PostHeader'})
     href = div.a['href']
     request = Request(
@@ -193,7 +193,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
 
     # Get the starting report
     link = soup.find('link', attrs={'rel': 'start'})

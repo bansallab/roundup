@@ -162,7 +162,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
 
     content = soup.find('div', id = 'matrix_44243504')
     table = content.find('div', attrs={'class':'tableContainer'}).find('table')

@@ -139,7 +139,7 @@ def main():
             headers = scrape_util.url_header,
             )
         with urlopen(request) as io:
-            soup = BeautifulSoup(io.read())
+            soup = BeautifulSoup(io.read(), 'lxml')
         report = [a for a in soup.find_all('a') if re.search(r'[0-9]{,2} ?, ?[0-9]{4}', a.get_text())]
 
         # Locate existing CSV files

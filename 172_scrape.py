@@ -131,7 +131,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     report = soup.find('div',{'id':'ESW_GEN_ID_3'})
     report = report.findAll('a')
 

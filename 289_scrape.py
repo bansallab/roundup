@@ -130,7 +130,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     button = soup.find('select', attrs = {'class' : 'gsitxt2' })
     option = button.find_all('option')
     report = []
@@ -165,7 +165,7 @@ def main():
             headers = scrape_util.url_header,
             )
         with urlopen(request) as io:
-            soup = BeautifulSoup(io.read())
+            soup = BeautifulSoup(io.read(), 'lxml')
 
         sale_head = get_sale_head(soup)
         this_default_sale['sale_head'] = sale_head

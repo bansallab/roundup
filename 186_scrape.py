@@ -171,7 +171,7 @@ def main():
         base_url + report_path,
         headers=scrape_util.url_header,
         )
-    soup = BeautifulSoup(response.text)
+    soup = BeautifulSoup(response.content, 'lxml')
     report = [soup]
 
     # Locate existing CSV files

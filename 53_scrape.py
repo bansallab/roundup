@@ -138,7 +138,7 @@ def main():
 
     for this_report in report:
 
-        this_report = BeautifulSoup(this_report)
+        this_report = BeautifulSoup(this_report, 'lxml')
 
         tr = this_report.find_all('tr')
         sale_date = get_sale_date(tr.pop(0))

@@ -77,7 +77,7 @@ def main():
     response = session.get(
         url=base_url + report_path,
         )
-    soup = BeautifulSoup(response.content)
+    soup = BeautifulSoup(response.content, 'lxml')
     div = soup.find('div', attrs={'id': 'marketReports'})
     report_type = div.find(
         'select',
@@ -97,7 +97,7 @@ def main():
             data=data,
             headers={'Referer': base_url}
             )
-        soup = BeautifulSoup(response.content)
+        soup = BeautifulSoup(response.content, 'lxml')
         div = soup.find('div', attrs={'id': 'marketReports'})
         report_date = div.find(
             'select',
@@ -121,7 +121,7 @@ def main():
                 data=data,
                 headers={'Referer': base_url}
                 )
-            soup = BeautifulSoup(response.content)
+            soup = BeautifulSoup(response.content, 'lxml')
             this_report = soup.find_all('div', attrs={'class': 'item'})
             sale_head = soup.find('span', attrs={'id': re.compile('.*_lblHeadSold')})
             sale_head = re.match('Head Sold: (\d+)', sale_head.get_text()).group(1)

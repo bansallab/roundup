@@ -97,7 +97,7 @@ def main():
         headers=scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     button = soup.find_all('select', attrs = {'class' : 'reg' })[which_button]
     option = button.find_all('option')
     report = []
@@ -116,7 +116,7 @@ def main():
             headers = scrape_util.url_header,
             )
         with urlopen(request) as io:
-            soup = BeautifulSoup(io.read())
+            soup = BeautifulSoup(io.read(), 'lxml')
         line = [v.strip() for v in soup.get_text().splitlines()]
         line = []
         for v in soup.get_text().splitlines():

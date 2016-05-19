@@ -102,7 +102,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     report = [soup.find_all('table')[2]]
 
     # Locate existing CSV files
@@ -111,7 +111,7 @@ def main():
     # Write a CSV file for each report not in the archive
     for this_report in report:
 
-        soup = BeautifulSoup(re.sub(r'</?br/?>', '\n', str(this_report.td)))
+        soup = BeautifulSoup(re.sub(r'</?br/?>', '\n', str(this_report.td)), 'lxml')
         text = re.sub(r'\xa0+', ' ', soup.get_text())
         match = re.search(r'(.+?[0-9]+\s*Head)(.*)', text, flags=re.IGNORECASE|re.DOTALL)
         title = match.group(1)

@@ -106,7 +106,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     # div = soup.find(id='content')
     div = soup.find('div', attrs={'class':'entry-content'})
     p = div.p

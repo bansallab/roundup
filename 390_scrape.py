@@ -143,7 +143,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     table = next(
         this_table for this_table in soup.find_all('table')
         if not this_table.tr.table and 'ARCHIVED MARKET REPORTS' in this_table.tr.get_text()
@@ -195,7 +195,7 @@ def main():
             line = [[re.sub(r'\.0$', '', str(td)) for td in sheet.row_values(idx)] for idx in range(0, sheet.nrows)]
             temp_raw.clean()
         else:
-            soup = BeautifulSoup(response)
+            soup = BeautifulSoup(response, 'lxml')
             # line = [[td.get_text() for td in tr.find_all('td')] for tr in soup.find_all('tr')]
             line = [
                 [re.sub(r'\r|\n', '', text) for text in re.split(r'\xa0+', p.get_text())]

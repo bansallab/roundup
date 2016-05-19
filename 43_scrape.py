@@ -119,7 +119,7 @@ def main():
         base_url + report_path,
         headers=scrape_util.url_header,
         )
-    soup = BeautifulSoup(urlopen(request).read())
+    soup = BeautifulSoup(urlopen(request).read(), 'lxml')
     div = soup.find('div', attrs = {'id': 'content'})
     report = list(list(td for td in tr.find_all('td')) for tr in div.table.find_all('tr') if re.search(r'market report', tr.get_text(), re.IGNORECASE))
 
@@ -150,7 +150,7 @@ def main():
                 base_url + this_report[0].a['href'],
                 headers = scrape_util.url_header,
                 )
-            soup = BeautifulSoup(urlopen(request).read())
+            soup = BeautifulSoup(urlopen(request).read(), 'lxml')
             div = soup.find('div', attrs = {'id': 'content'})
             details = div.table.find_all('tr')[2].find_all('td')[1]
         except urllib.error.HTTPError:

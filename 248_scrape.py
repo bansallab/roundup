@@ -109,7 +109,7 @@ def main():
     #     )
 
     # with urlopen(request) as io:
-    #     soup = BeautifulSoup(io.read())
+    #     soup = BeautifulSoup(io.read(), 'lxml')
 
     # report = [soup]
 

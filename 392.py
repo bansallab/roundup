@@ -162,7 +162,7 @@ def write_sale(line, this_default_sale, writer):
 def main():            
     
     response = requests.get(base_url + report_path, headers=scrape_util.url_header)
-    soup = BeautifulSoup(response.text)
+    soup = BeautifulSoup(response.content, 'lxml')
     div = soup.find_all('div', attrs={'class':'File_Default'})
     report = [this_div.a for this_div in div]
     report.reverse()

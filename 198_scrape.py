@@ -205,7 +205,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     td = soup.find(id='nav')
     nav_string = td.find(text='Market Reports')
     current_url = nav_string.parent['href']
@@ -218,7 +218,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     file_re = re.compile(r'/images/[^/]+/C[0-9]{6}\.pdf')
     report = file_re.findall(str(soup))
 
@@ -228,7 +228,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
     report += [[a['id'], a.string] for a in soup.find_all('a', attrs={'href': "#"})]
 
     for this_report in report:

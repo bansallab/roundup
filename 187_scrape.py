@@ -141,7 +141,7 @@ def main():
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
-        soup = BeautifulSoup(io.read())
+        soup = BeautifulSoup(io.read(), 'lxml')
 
     a_tag = soup.find_all('a')
     report = []
@@ -175,7 +175,7 @@ def main():
             headers = scrape_util.url_header,
         )
         with urlopen(request) as io:
-            soup = BeautifulSoup(io.read())
+            soup = BeautifulSoup(io.read(), 'lxml')
 
         table = soup.find_all('table', id = re.compile('table[0-9]+'))
         # List each line of the report
