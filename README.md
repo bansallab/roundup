@@ -6,7 +6,7 @@ Different livestock market websites provide remarkably consistent types of infor
 To systematically record cattle sales, a script is customized to "round up" data from each livestock market's website and write a commonly formatted CSV version to a locally stored archive.
 
 ### Collaboration
-Contribution to and use of this repository is de facto restricted to collaborators with access to the associated database, which includes the website URLs among other private information. For collaborators contributing to the project, the following instructions will help you get started at writing a script to scrape a new website. The function `scrape_util.get_market` expects to find a working mysql client program and a configuration file for connecting to the database under group heading [roundup] at ~/.my.cnf. See the [MySQL reference manual](http://dev.mysql.com/doc/refman/5.7/en/option-files.html) for details.
+Contribution to and use of this repository is de facto restricted to collaborators with access to the associated database, which includes the website URLs among other private information. For collaborators contributing to the project, the following instructions will help you get started at writing a script to scrape a new website. The function `scrape_util.get_market` expects to find a working mysql client program and a configuration file for connecting to the database under group heading [roundup-db] at ~/.my.cnf. See the [MySQL reference manual](http://dev.mysql.com/doc/refman/5.7/en/option-files.html) for details.
 
 ### Getting Started
 
