@@ -1,6 +1,6 @@
 #!/bin/bash
-echo 'START'
 
+echo 'START'
 export TESSDATA_PREFIX=`dirname $0`
 cd `dirname $0`
 arx=dbased.tar.gz
@@ -22,12 +22,12 @@ rm $arx
 mv $arx.gpg ~/"Dropbox (Bansal Lab)"/Ian_Bansal_Lab/cownet/data/
 echo '  END ARCHIVE'
 
-# echo '  START DROPBOX SYNC'
-# dropbox start
-# while [[ "$(dropbox status)" != "Up to date" ]]; do
-#   sleep 1
-# done
-# dropbox stop
-# echo '  END DROPBOX SYNC'
+echo '  START DROPBOX SYNC'
+dropbox start
+while [[ "$(dropbox status)" != "Up to date" ]]; do
+  sleep 10
+done
+dropbox stop
+echo '  END DROPBOX SYNC'
 
 echo 'END'

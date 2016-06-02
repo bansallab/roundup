@@ -63,6 +63,7 @@ def get_sale(match, cattle):
 def write_sale(line, default_sale, writer):
 
     # extract & write sale dictionary
+    cattle = ''
     for this_line in filter(bool, line):
         match = sale_pattern.search(this_line)
         if not match and this_line:

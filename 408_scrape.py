@@ -48,7 +48,14 @@ sale_pattern = [
         r'(?P<city>[^\d]+)'
         r'(?P<weight>\d+)\s*lb[^\d]*'
         r'(?P<price>[\d\.]+)'
-        )
+        ),
+    re.compile(
+        r'(?P<head>\d+)hd\s*,'
+        r'(?P<cattle>.*?),'
+        r'(?P<city>.*?),'
+        r'(?P<weight>)'
+        r'[\$\s]*(?P<price>[\d\.]+)'
+        ),
     ]
 
 

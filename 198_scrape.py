@@ -207,29 +207,17 @@ def main():
     with urlopen(request) as io:
         soup = BeautifulSoup(io.read(), 'lxml')
     td = soup.find(id='nav')
-    nav_string = td.find(text='Market Reports')
-    current_url = nav_string.parent['href']
-    nav_string = td.find(text='Cattle Market Reports')
-    prior_url = nav_string.parent['href']
+    report_path = td.find(text='Market Reports').parent['href']
 
     # get report links from page of current reports
     request = Request(
-        base_url + current_url,
+        base_url + report_path,
         headers = scrape_util.url_header,
         )
     with urlopen(request) as io:
         soup = BeautifulSoup(io.read(), 'lxml')
     file_re = re.compile(r'/images/[^/]+/C[0-9]{6}\.pdf')
     report = file_re.findall(str(soup))
-
-    # get report links from page of prior reports
-    request = Request(
-        base_url + prior_url,
-        headers = scrape_util.url_header,
-        )
-    with urlopen(request) as io:
-        soup = BeautifulSoup(io.read(), 'lxml')
-    report += [[a['id'], a.string] for a in soup.find_all('a', attrs={'href': "#"})]
 
     for this_report in report:
 

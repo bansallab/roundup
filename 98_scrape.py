@@ -178,7 +178,7 @@ def main():
             this_line = [i.strip() for i in this_line if i.strip()]
             this_line = [b for a in this_line for b in a.split()]
             if this_line:
-                line.append()
+                line.append(this_line)
 
         with io_name.open('w', encoding='utf-8') as io:
             writer = csv.DictWriter(io, scrape_util.header, lineterminator='\n')

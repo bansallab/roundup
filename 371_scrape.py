@@ -16,8 +16,13 @@ temp_raw = scrape_util.ReportRaw(argv, prefix)
 
 def get_sale_date(line):
 
-    date_string = ' '.join(line[2][-3:])
-    sale_date = dateutil.parser.parse(date_string, fuzzy=False).date()
+    sale_date = None
+    while not sale_date:
+        date_string = ' '.join(line.pop(0)[-3:])
+        try:
+            sale_date = dateutil.parser.parse(date_string, fuzzy=False).date()
+        except:
+            pass
     if sale_date >= date.today():
         sale_date = None
     
