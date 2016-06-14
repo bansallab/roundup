@@ -9,7 +9,7 @@ import scrape_util
 
 
 default_sale, base_url, prefix = scrape_util.get_market(argv)
-report_path = 'market_report'
+report_path = 'market_reports'
 temp_raw = scrape_util.ReportRaw(argv, prefix)
 strip_char = ';,. \n\t'
 to_float = re.compile(r'\$|,')

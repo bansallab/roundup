@@ -73,7 +73,7 @@ def is_number(string):
     """Test whether a string is number-ish. Ignoring units like 'cwt' and 'hd'."""
 
     if string:
-        string = re.sub(r'\$|[,-/]|cwt|he?a?d?', '', string, flags = re.IGNORECASE)
+        string = re.sub(r'\$|[,-/]|cwt|he?a?d?|per', '', string, flags = re.IGNORECASE)
         try:
             float(string)
             result = True

@@ -9,14 +9,15 @@ import scrape_util
 
 
 default_sale, base_url, prefix = scrape_util.get_market(argv)
-report_path = 'actual-sales-from-this-week/'
+#report_path = 'actual-sales-from-this-week/'
+report_path = ''
 strip_char = ';,. \n\t\xa0'
 
 
 def get_sale_date(content):
     """Return the date of the sale."""
     
-    date_string = content.find_all('div')[1].get_text()
+    date_string = content.find(text=re.compile('Weeks? of'))
     
     match = re.search(r'(\d+)\s*(and|&)\s*(\d+)', date_string)
     if match:
@@ -164,8 +165,10 @@ def main():
     with urlopen(request) as io:
         soup = BeautifulSoup(io.read(), 'lxml')
 
-    content = soup.find('div', id = 'matrix_44243504')
-    table = content.find('div', attrs={'class':'tableContainer'}).find('table')
+    # content = soup.find('div', id = 'matrix_44243504')
+    # table = content.find('div', attrs={'class':'tableContainer'}).find('table')
+    content = soup.find('div', attrs={'class': 'sortable-matrix'})
+    table = content.find('table')
     line = table.find_all('tr')
     report = get_sale_date(content)
 

@@ -12,7 +12,7 @@ report_path = '/market_cards/scan.PDF'
 temp_raw = scrape_util.ReportRaw(argv, prefix)
 #CONVERT_SPEC = '-density 600 {!s} -crop 2400x4000+100+1800 -threshold 20% -deskew 40% -morphology close disk:3 -threshold 30%'
 #CONVERT_SPEC = '-density 600 {!s} -crop 2400x4000+100+1800 -threshold 50% -deskew 40% -morphology close disk:3 -threshold 30%'
-CONVERT_SPEC = '-density 600 {!s} -crop 2400x4400+100+1200 -threshold 50% -deskew 40% -morphology close disk:3 -threshold 30%'
+CONVERT_SPEC = '-density 600 {!s} -crop 2400x4400+100+1200 -threshold 20% -deskew 40% -morphology close disk:3 -threshold 30%'
 sale_pattern = [
     re.compile(
         r'(?P<city>.*?)[\.,\s]+'
