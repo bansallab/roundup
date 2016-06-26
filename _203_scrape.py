@@ -38,27 +38,23 @@ def is_heading(this_line):
 def is_sale(td_text, tr):
 
     text = ' '.join(td_text)
-
     result = True
 
-    if result and not any(td_text):
+    if not any(td_text):
         result = False
-
-    if result and not has_span(tr):
+    elif not has_span(tr):
         result = False
-
-    if result and tr.find('strong'):
+    elif tr.find('strong'):
         result = False
-
-    if result and re.search(r'sold for', text, re.IGNORECASE):
+    elif re.search(r'sold for', text, re.IGNORECASE):
         result = False
-
-    if result and is_number(td_text[1]):
+    elif is_number(td_text[1]):
         result = False
-
-    if result and re.search(r'\d+\s+TO\s+\d+', text):
+    elif re.search(r'\d+\s+TO\s+\d+', text):
         result = False
-
+    elif text.strip() == 'LITE TEST ON STRS':
+        result = False
+    
     return result
 
 

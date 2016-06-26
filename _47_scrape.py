@@ -158,10 +158,16 @@ def main():
     # Write a CSV file for each report not in the archive
     for this_report in report:
 
+        header = None
         for sibling in this_report.previous_siblings:
             if sibling.name == 'h1':
                 header = sibling.get_text()
                 break
+        if not header:
+            for sibling in this_report.previous_siblings:
+                if hasattr(sibling, 'b'):
+                    header = sibling.get_text()
+                    break
     
         sale_date = get_sale_date(header)
         io_name = archive.new_csv(sale_date)
