@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 
 def get_market(argv):
 
-    roundup_website_id = Path(argv[0]).stem.split('_')[0]
+    roundup_website_id = Path(argv[0]).stem.split('_')[1]
     connect_args = {
         'option_files': expanduser('~') + '/.my.cnf',
         'option_groups': ['client', 'roundup-db'],

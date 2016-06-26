@@ -12,6 +12,25 @@ default_sale, base_url, prefix = scrape_util.get_market(argv)
 report_path = '/MarketReport.html'
 strip_char = ';,. \n\t@'
 temp_raw = scrape_util.ReportRaw(argv, prefix)
+head_pattern = re.compile(r'(\d+)\s*head?', re.IGNORECASE)
+sale_patterns = [
+    re.compile(
+        r'(^|\s{2,})(?P<head>\d+)'
+        r'(?P<cattle>[^\d#]+)'
+        r'#?(?P<weight>\d+)\s*@'
+        r'[\s\$]+(?P<price>[0-9]+\.[0-9]{2}$)'
+        ),
+    re.compile(
+        r'(Feeder Cattle )?-\s*(?P<head>\d+)'
+        r'(?P<cattle>[^\d]+)'
+        r'(?P<weight>\d+)\s+@'
+        r'[\s\$]+(?P<price>[0-9]+\.[0-9]{2}$)'
+        ),
+    ]
+location_pattern = re.compile(
+    r'(^|\s{2,})(?P<city>[\w\s]+),\s*'
+    r'(?P<state>' + scrape_util.state + r')$'
+    )
 
 
 def get_sale_date(this_report):
@@ -23,88 +42,38 @@ def get_sale_date(this_report):
     return sale_date
 
 
-def is_sale(this_line):
-    """Determine whether a given line describes a sale of cattle."""
-    
-    has_price = re.search(r'\$+[0-9]+\.[0-9]{2}', str(this_line))
-    is_not_succinct = (len(this_line) > 3)
-    
-    return bool(has_price and is_not_succinct)
+def get_sale_head(line):
+
+    match = None
+    while not match:
+        this_line = line.pop(0)
+        match = head_pattern.search(this_line)
+
+    return match.group(1)
 
 
-def is_location (this_line):
-
-    has_location = re.search(scrape_util.state, str(this_line))
-
-    return bool(has_location)
-
-
-def is_sale_head(this_line):
-
-    has_sale_head = re.search(r'HEAD?',str(this_line))
-
-    return bool(has_sale_head)
-
-
-def is_number(string):
-    
-    has_string = re.search(r'^[0-9,\.\$]+$', string)
-    
-    return bool(has_string)
-
-
-def get_sale_head(this_line):
-
-    sale_head = {'sale_head':this_line[0]}
-    
-    return sale_head
-
-
-def get_sale_location(this_line):
+def get_sale_location(match):
     """Convert address strings into a list of address components."""
 
-    state = this_line[-1]
-    city = this_line[-2].replace(',','')
+    sale = {
+        'consignor_city': match.group('city').strip(),
+        'consignor_state': match.group('state'),
+        }
     
-    sale_location = {
-            'consignor_city': city,
-            'consignor_state': state
-            }
-    
-    return sale_location
+    return sale
 
 
-def get_sale(this_line):
+def get_sale(match):
     """Convert the input into a dictionary, with keys matching
     the CSV column headers in the scrape_util module.
     """
-    this_line = [ i.replace('@','').replace('-','') for i in this_line]
-    number_word = list(
-        idx for idx, val in enumerate(this_line)
-        if is_number(val)
-        )
 
-    sale_list = this_line[number_word[-3]:]
-        
-    head_string = this_line[number_word[-3]]
-    sale = {'cattle_head' : head_string}
-    
-    if number_word[-2] - number_word[-3] == 2:
-        cattle = this_line[number_word[-3]+1]
-    elif number_word[-2] - number_word[-3] > 2:
-        cattle = ' '.join(this_line[number_word[-3]+1 : number_word[-2]])
-    else:
-        cattle = ''
-    
-    sale['cattle_cattle']= cattle
-
-    weight_string = this_line[number_word[-2]]
-    sale['cattle_avg_weight'] = weight_string
-
-    price_string = this_line[number_word[-1]].replace(',', '')
-    price_string = price_string.replace('$','')
-    price_float = float(price_string) * 100
-    sale['cattle_price_cwt'] = '{:.2f}'.format(price_float)
+    sale = {
+        'cattle_head': match.group('head'),
+        'cattle_cattle': match.group('cattle').strip(),
+        'cattle_avg_weight': match.group('weight'),
+        'cattle_price_cwt': match.group('price').replace(',', ''),
+        }
 
     return sale
 
@@ -113,14 +82,18 @@ def write_sale(line, this_default_sale, writer):
     """Extract sales from a list of report lines and write them to a CSV file."""
     
     for this_line in line:
-        if is_sale_head(this_line):
+        for sale_pattern in sale_patterns:
+            sale_match = sale_pattern.search(this_line)
+            if sale_match:
+                break
+        if sale_match:
             sale = this_default_sale.copy()
-            sale.update(get_sale_head(this_line))
-        if is_sale(this_line):
-            sale.update(get_sale(this_line))
-        if is_location(this_line):
-            sale.update(get_sale_location(this_line))
-            writer.writerow(sale)
+            sale.update(get_sale(sale_match))
+        else:
+            location_match = location_pattern.search(this_line)
+            if location_match:
+                sale.update(get_sale_location(location_match))
+                writer.writerow(sale)
 
 
 def main():
@@ -161,14 +134,16 @@ def main():
         # read sale text into line list
         temp_txt = temp_raw.with_suffix('.txt')
         with temp_txt.open('r') as io:
-            line = [this_line.strip(strip_char).split() for this_line in io.readlines()]
+            line = [this_line.strip() for this_line in io.readlines()]
         temp_raw.clean()
         
+        sale_head = get_sale_head(line)
         this_default_sale = default_sale.copy()
         this_default_sale.update({
             'sale_year': sale_date.year,
             'sale_month': sale_date.month,
             'sale_day': sale_date.day,
+            'sale_head': sale_head,
             })
 
         with io_name.open('w') as io:
