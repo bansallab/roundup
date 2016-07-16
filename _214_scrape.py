@@ -17,9 +17,9 @@ sale_pattern = [
     re.compile(
         r'(?P<name>[^,]+),'
         r'(?P<city>[^\d,]+),?\s+'
-        r'(?P<head>\d+)\s+'
-        r'(?P<cattle>.+?)\s{2,}'
-        r'(?P<weight>[\d,]*)\s+'
+        r'(?P<head>\d+)\s*'
+        r'(?P<cattle>.+?)[\s_]{2,}'
+        r'(?P<weight>[\d,\.]*)\s+'
         r'\$(?P<price>[\d,\.]+)\s*'
         r'(?P<price_type>/Hd|/Cwt)?',
         re.IGNORECASE
@@ -29,13 +29,23 @@ sale_pattern = [
         r'(?P<city>)'
         r'(?P<head>\d+)\s+'
         r'(?P<cattle>.+?)\s{2,}'
-        r'(?P<weight>[\d,]*)\s+'
+        r'(?P<weight>[\d,\.]*)\s+'
+        r'\$(?P<price>[\d,\.]+)\s*'
+        r'(?P<price_type>/Hd|/Cwt)?',
+        re.IGNORECASE
+        ),
+    re.compile(
+        r'(?P<name>[^,]+),'
+        r'(?P<city>.+?)\s{2,}'
+        r'(?P<head>)'
+        r'(?P<cattle>.+?)\s{2,}'
+        r'(?P<weight>[\d,\.]*)\s+'
         r'\$(?P<price>[\d,\.]+)\s*'
         r'(?P<price_type>/Hd|/Cwt)?',
         re.IGNORECASE
         ),
     ]
-not_cattle_pattern = re.compile(r'goat|hog|ewe|buck|lamb|kid|sow', re.IGNORECASE)
+not_cattle_pattern = re.compile(r'goat|hog|ewe|buck|lamb|kid|sow|mare', re.IGNORECASE)
 head_pattern = re.compile(r'([,\d]+)\s+he?a?d', re.IGNORECASE)
 
 
@@ -87,7 +97,7 @@ def get_sale(line):
         'consignor_city': match.group('city'),
         'cattle_head': match.group('head'),
         'cattle_cattle': match.group('cattle'),
-        'cattle_avg_weight': match.group('weight').replace(',', ''),
+        'cattle_avg_weight': match.group('weight').replace(',', '').replace('.', ''),
         }
     price = match.group('price').replace(',', '')
     if match.group('price_type') == '/Hd':
@@ -128,6 +138,9 @@ def main():
 
     # Write a CSV file for each report not in the archive
     for this_report in report:
+
+        if 'horse' in this_report.get_text().lower():
+            continue
     
         sale_date = get_sale_date(this_report)
         io_name = archive.new_csv(sale_date)
@@ -159,7 +172,13 @@ def main():
         # read sale text into line list
         temp_txt = temp_raw.with_suffix('.txt')
         with temp_txt.open('r') as io:
-            original_line = [this_line.strip() for this_line in io.readlines()]
+            original_line = [this_line.strip() for this_line in io.readlines() if this_line.strip()]
+        if not original_line:
+            temp_img = temp_raw.with_suffix('.tiff')
+            system(scrape_util.convert.format("-density 400x400", str(temp_raw), str(temp_img)))
+            system(scrape_util.tesseract.format("-c preserve_interword_spaces=1", str(temp_img), str(temp_txt.with_suffix(''))))
+            with temp_txt.open('r') as io:
+                original_line = [this_line.strip() for this_line in io.readlines() if this_line.strip()]
         temp_raw.clean()
 
         # # Default split index set at 120 to handle Jan 22, 2015 report with one column of sale
