@@ -1,5 +1,5 @@
 import csv
-from urllib.request import Request, urlopen
+import requests
 import re
 from sys import argv
 from bs4 import BeautifulSoup
@@ -156,14 +156,13 @@ def write_sale(line, this_default_sale, writer):
 def main():
     
     # get URLs for all reports
-    request = Request(
+    response = requests.get(
         base_url + report_path_1,
         headers = scrape_util.url_header,
         )
-    with urlopen(request) as io:
-        soup = BeautifulSoup(io.read(), 'lxml')
-    content = soup.findAll('table')
-    report = content[1].findAll('a')
+    soup = BeautifulSoup(response.content, 'lxml')
+    content = soup.find_all('table')
+    report = content[1].find_all('a')
     
     # Identify existing reports
     archive = scrape_util.ArchiveFolder(argv, prefix)
@@ -180,24 +179,21 @@ def main():
         if not io_name:
             continue
 
-        this_report = this_report_stem + '.pdf'
-        request = Request(
-            base_url + report_path_2 + this_report,
-            headers = scrape_util.url_header,
-            )
-        
         this_default_sale = default_sale.copy()
         this_default_sale.update({
             'sale_year': sale_date.year,
             'sale_month': sale_date.month,
             'sale_day': sale_date.day,
             })
-
+        
         # create temporary text file from downloaded pdf
-        with urlopen(request) as io:
-            response = io.read()
+        this_report = this_report_stem + '.pdf'
+        response = requests.get(
+            base_url + report_path_2 + this_report,
+            headers = scrape_util.url_header,
+            )
         with temp_raw.open('wb') as io:
-            io.write(response)
+            io.write(response.content)
         system(scrape_util.pdftotext.format(str(temp_raw)))
         
         # read sale text into line list
