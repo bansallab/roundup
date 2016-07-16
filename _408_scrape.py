@@ -19,6 +19,7 @@ cattle_pattern = [
     re.compile(r'~?(?P<cattle>(spade|beef)?\s*heifers)', re.IGNORECASE),
     re.compile(r'~?(?P<cattle>bulls)', re.IGNORECASE),
     re.compile(r'~?(?P<cattle>cows)', re.IGNORECASE),
+    re.compile(r'~(?P<cattle>(?=video))', re.IGNORECASE),
     ]
 sale_pattern = [
     re.compile(

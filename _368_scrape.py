@@ -34,7 +34,7 @@ def is_number(string):
 
 
 def is_heading(this_line):
-    has_heading = re.search(r'Fat|Fats|Feeders|Cows',str(this_line))
+    has_heading = re.search(r'Fats?|Feeders|Cows|Bulls',str(this_line))
     is_succinct = len(this_line) < 3
     return bool(has_heading and is_succinct)
 

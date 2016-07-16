@@ -66,7 +66,7 @@ def is_number(string):
     """Test whether a string is number-ish. Ignoring units like 'cwt' and 'hd'."""
 
     if string:
-        string = re.sub(r'\$|[,-/]|c?wt|cw?t|he?a?d?|l?bs|bls|phd|ppr?|pph|lbs/each', '', string, flags = re.IGNORECASE)
+        string = re.sub(r'\$|[,-/]|c?wt|cw?t|he?a?d?|l*bs|bls|phd|ppr?|pph|lbs/each', '', string, flags = re.IGNORECASE)
         string = string.replace('oo','00')
         try:
             float(string)
