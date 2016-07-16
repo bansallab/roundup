@@ -10,10 +10,11 @@ py=$(ls *_scrape.py)
 for this_py in $py; do
   env/bin/python $this_py
   if [[ $? != 0 ]]; then
-    echo '    CLEANUP from $this_py'
+    echo "    CLEANUP from $this_py"
     id=$(echo $this_py | cut -d '_' -f 2)
     prefix=$(mysql -N -D cownet -e "select script from roundup_website where roundup_website_id = $id")
-    rm $prefix_scrape/*.csv
+    mkdir -p ${prefix}_scrape/cleanup
+    mv ${prefix}_scrape/*.csv ${prefix}_scrape/cleanup/
   fi
 done
 echo '  END SCRAPE'
