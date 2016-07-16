@@ -1,5 +1,5 @@
 import csv
-from urllib.request import Request, urlopen
+import requests
 import re
 from sys import argv
 from bs4 import BeautifulSoup
@@ -9,8 +9,6 @@ import scrape_util
 
 which_button = 0
 default_sale, base_url, prefix = scrape_util.get_market(argv)
-report_path_1 = 'marketreport.php'
-report_path_2 = 'market-reports.php?reportID='
 
 
 def is_sale(word):
@@ -58,18 +56,17 @@ def get_sale(word):
 def main():
 
     # get URLs for historical reports
-    request = Request(
-        base_url + report_path_1,
+    response = requests.get(
+        base_url,
         headers=scrape_util.url_header,
         )
-    with urlopen(request) as io:
-        soup = BeautifulSoup(io.read(), 'lxml')
-    button = soup.find_all('select', attrs = {'class' : 'reg' })[which_button]
+    soup = BeautifulSoup(response.content, 'lxml')
+    button = soup.find('select', attrs = {'name' : 'reportID' })
     option = button.find_all('option')
     report = []
     for this_option in option:
         if this_option['value']:
-            report.append((this_option.get_text(), base_url + report_path_2 + this_option['value']))
+            report.append((this_option.get_text(), base_url[:-1] + "?reportID=" + this_option['value']))
             
     # Identify existing reports
     archive = scrape_util.ArchiveFolder(argv, prefix)
@@ -77,20 +74,27 @@ def main():
     # write csv file for each historical report
     for this_report in report:
         this_date = this_report[0]
-        request = Request(
+        sale_date = get_sale_date(this_date)
+
+        # skip existing files
+        io_name = archive.new_csv(sale_date)
+        if not io_name:
+            continue
+
+        response = requests.get(
             this_report[1],
-            headers = scrape_util.url_header,
+            headers=scrape_util.url_header,
             )
-        with urlopen(request) as io:
-            soup = BeautifulSoup(io.read(), 'lxml')
-        text = re.sub(r'(\$[0-9.]+ \t)', r'\1\n', soup.get_text())
+        soup = BeautifulSoup(response.content, 'lxml')
+        div = soup.find_all('div', attrs={'class': 'sml'})[2]
+        div.table.extract()
+        text = re.sub(r'(\$[0-9.]+ \t)', r'\1\n', div.get_text())
         line = text.splitlines()
         line = list(filter(bool, line))
         if re.search('estimating', line[0], re.IGNORECASE):
             continue
 
         # sale date
-        sale_date = get_sale_date(this_date)
         sale_head = get_sale_head(line)
         this_default_sale = default_sale.copy()
         this_default_sale.update({
@@ -99,11 +103,6 @@ def main():
             'sale_day': sale_date.day,
             'sale_head': sale_head,
             })
-
-        # skip existing files
-        io_name = archive.new_csv(sale_date)
-        if not io_name:
-            continue
 
         # open csv file and write header
         with io_name.open('w', encoding='utf-8') as io:
