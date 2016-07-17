@@ -9,26 +9,28 @@ import scrape_util
  
 default_sale, base_url, prefix = scrape_util.get_market(argv)
 report_path = 'Past%20Auction%20Results.htm'
+date_pattern = re.compile(r'\d{1,2}/\d{1,2}/\d{2,4}')
+head_pattern = re.compile(r'(?P<head>\d+)\s*(hd|head)?\s*sold', re.IGNORECASE)
 strip_char = ';,. \n\t'
 
 
-def get_sale_date(header):
+def get_sale_date(date_string):
     """Return the date of the sale."""
 
-    sale_date = dateutil.parser.parse(header, fuzzy=True)
+    sale_date = dateutil.parser.parse(date_string).date()
 
     return sale_date
 
 
-def get_sale_head(footer):
+# def get_sale_head(footer):
 
-    match = re.search(r'([0-9,]+) *(hd|head)? *sold', footer, re.IGNORECASE)
-    if match:
-        head = match.group(1).replace(',','')
-    else:
-        head = None
+#     match = re.search(r'([0-9,]+) *(hd|head)? *sold', footer, re.IGNORECASE)
+#     if match:
+#         head = match.group(1).replace(',','')
+#     else:
+#         head = None
 
-    return head
+#     return head
 
 
 def is_sale(this_line):
@@ -158,18 +160,23 @@ def main():
     # Write a CSV file for each report not in the archive
     for this_report in report:
 
-        header = None
         for sibling in this_report.previous_siblings:
-            if sibling.name == 'h1':
-                header = sibling.get_text()
+            if not hasattr(sibling, 'text'):
+                continue
+            match = date_pattern.search(sibling.text)
+            if match:
                 break
-        if not header:
-            for sibling in this_report.previous_siblings:
-                if hasattr(sibling, 'b'):
-                    header = sibling.get_text()
-                    break
+
+        #     if sibling.name == 'h1':
+        #         header = sibling.get_text()
+        #         break
+        # if not header:
+        #     for sibling in this_report.previous_siblings:
+        #         if hasattr(sibling, 'b'):
+        #             header = sibling.get_text()
+        #             break
     
-        sale_date = get_sale_date(header)
+        sale_date = get_sale_date(match.group(0))
         io_name = archive.new_csv(sale_date)
 
         # Stop iteration if this report is already archived
@@ -178,20 +185,24 @@ def main():
         
         # Initialize the default sale dictionary
         this_default_sale = default_sale.copy()
-
-        for sibling in this_report.next_siblings:
-            if sibling.name == 'h1':
-                footer = sibling.get_text()
-                break
-
-        sale_head = get_sale_head(footer)
-
         this_default_sale.update({
             'sale_year': sale_date.year,
             'sale_month': sale_date.month,
             'sale_day': sale_date.day,
-            'sale_head': sale_head,
             })
+
+        for sibling in this_report.next_siblings:
+            if not hasattr(sibling, 'text'):
+                continue
+            match = head_pattern.search(sibling.text)
+            if match:
+                this_default_sale['sale_head'] = match.group('head').replace(',', '')
+                break
+        #     if sibling.name == 'h1':
+        #         footer = sibling.get_text()
+        #         break
+
+        # sale_head = get_sale_head(footer)
 
         # List each line of the report
         line = this_report.find_all('tr')
